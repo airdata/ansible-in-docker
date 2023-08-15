@@ -1,9 +1,0 @@
-version: '3.2'
-
-services:
-
-  jenkins-master:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    image: airdata/ansible-in-docker:latest
