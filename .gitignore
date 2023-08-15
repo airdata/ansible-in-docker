@@ -10,7 +10,6 @@ templates/*.j2-*
 
 # Try tyo avoid any plain-text passwords
 *pwd*
-*pass*
 *password*
 *.txt
 
