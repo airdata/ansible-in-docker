@@ -13,9 +13,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: |
-            docker buildx build -t airdata/ansible-in-docker:latest . && \
-            echo $DOCKERHUB_PASS | docker login -u airdata --password-stdin && \
-            docker push airdata/ansible-in-docker:latest 
+      - uses: actions/checkout@v3
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: airdata/ansible-in-docker:latest
