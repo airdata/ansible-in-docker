@@ -16,6 +16,6 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: |
-            docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASS" && \
             docker buildx build -t airdata/ansible-in-docker:latest . && \
+            echo $DOCKERHUB_PASS | docker login -u airdata --password-stdin && \
             docker push airdata/ansible-in-docker:latest 
