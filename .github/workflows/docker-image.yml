@@ -40,7 +40,7 @@ jobs:
         with:
           images: |
             name=ghcr.io/${{ env.REGISTRY_IMAGE }}
-            name=ec${{ env.REGISTRY_IMAGE }}
+            name=${{ env.REGISTRY_IMAGE }}
           tags: |
             type=schedule
             type=ref,event=branch
