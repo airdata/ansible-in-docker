@@ -49,6 +49,11 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
+          labels: |
+            maintainer=CrazyMax
+            org.opencontainers.image.title=ansible-in-docker
+            org.opencontainers.image.description=Ansible
+            org.opencontainers.image.vendor=Airdata
       -
         name: Build and push
         uses: docker/build-push-action@v4
@@ -57,6 +62,10 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+            VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] 
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.GIT_TOKEN }}
       -
