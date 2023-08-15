@@ -17,5 +17,5 @@ jobs:
     - name: Build the Docker image
       run: |
             docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASS" && \
-            docker build -t airdata/ansible-in-docker:latest && \
+            docker buildx build -t airdata/ansible-in-docker:latest . && \
             docker push airdata/ansible-in-docker:latest 
