@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ "main" ]
 env:
-  REGISTRY_IMAGE: airdata/ansible-in-docker:latest
+  REGISTRY_IMAGE: airdata/ansible-in-docker
   
 jobs:
 
