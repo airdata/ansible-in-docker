@@ -1,0 +1,24 @@
+version: 2.1 # use CircleCI 2.1
+jobs:
+  build_ansible:
+    machine: true
+    working_directory: ~/ansible-in-docker
+
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/ansible-in-docker
+      - run:
+          name: Load archived Docker image
+          command: |
+            docker-compose -f docker-compose-build.yml build
+      - deploy:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASS"
+            docker-compose -f docker-compose-build.yml push
+workflows:
+  version: 2
+  default:
+    jobs:
+      - build_ansible
