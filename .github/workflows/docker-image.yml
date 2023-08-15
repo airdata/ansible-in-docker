@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ "main" ]
 env:
-  REGISTRY_IMAGE: airdata/ansible-in-docker
+  REGISTRY_IMAGE: airdata/ansible-in-docker:latest
   
 jobs:
 
@@ -34,43 +34,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.GITHUB_TOKEN }}
       -
-        name: Build and push by digest
-        id: build
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
-      -
-        name: Export digest
-        run: |
-          mkdir -p /tmp/digests
-          digest="${{ steps.build.outputs.digest }}"
-          touch "/tmp/digests/${digest#sha256:}"
-      -
-        name: Upload digest
-        uses: actions/upload-artifact@v3
-        with:
-          name: digests
-          path: /tmp/digests/*
-          if-no-files-found: error
-          retention-days: 1
-          
-      -
-        name: Create manifest list and push
-        working-directory: /tmp/digests
-        run: |
-          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
-          
-      -          
         name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: |
             ghcr.io/${{ env.REGISTRY_IMAGE }}
-            airdata/${{ env.REGISTRY_IMAGE }}
+            ${{ env.REGISTRY_IMAGE }}
           tags: |
             type=schedule
             type=ref,event=branch
@@ -89,8 +59,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
-
-      -  
+      -
         name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
