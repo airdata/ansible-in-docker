@@ -58,7 +58,7 @@ jobs:
         id: builder
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./docker
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
